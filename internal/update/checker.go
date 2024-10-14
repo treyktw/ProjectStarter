@@ -4,18 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Masterminds/semver/v3"
 )
 
 const (
-	versionURL = "https://example.com/cli-version.json" // Replace with your actual URL
+	versionURL = "hhttps://github.com/treyktw/ProjectStarter/releases/tag/cli-tool" // Replace with your actual URL
 )
 
 type VersionInfo struct {
-	LatestVersion string `json:"latest_version"`
-	DownloadURL   string `json:"download_url"`
+	LatestVersion string `json:"tag_name"`
+	DownloadURL   string `json:"html_url"`
 }
 
 func CheckForUpdates(currentVersion string) (*VersionInfo, error) {
@@ -30,6 +31,8 @@ func CheckForUpdates(currentVersion string) (*VersionInfo, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&versionInfo); err != nil {
 		return nil, fmt.Errorf("failed to parse version info: %v", err)
 	}
+	// Remove the "v" prefix if your tags are like "v1.0.0"
+	versionInfo.LatestVersion = strings.TrimPrefix(versionInfo.LatestVersion, "v")
 
 	current, err := semver.NewVersion(currentVersion)
 	if err != nil {
