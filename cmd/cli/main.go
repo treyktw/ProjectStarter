@@ -29,6 +29,17 @@ func main() {
 	} else if versionInfo != nil {
 		color.Yellow("A new version is available: %s", versionInfo.LatestVersion)
 		color.Yellow("Download it from: %s", versionInfo.DownloadURL)
+	} else {
+		color.Green("You're running the latest version!")
+	}
+
+	if len(os.Args) > 1 && os.Args[1] == "update" {
+		err := update.SelfUpdate(Version)
+		if err != nil {
+			fmt.Printf("Update failed: %v\n", err)
+			os.Exit(1)
+		}
+		os.Exit(0)
 	}
 
 	// Create a cancellable context
